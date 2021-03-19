@@ -1,6 +1,7 @@
 package com.example.weatherby.Utilities;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +44,7 @@ public final class NetworkUtils {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
+        Log.e(LOG_TAG, url.toString());
         return url;
     }
 
