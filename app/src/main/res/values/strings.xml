@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WeatherBy</string>
+    <string name="refresh_btn">Refresh</string>
+    <string name="error_message">Could not retrieve data, please try again!</string>
 </resources>

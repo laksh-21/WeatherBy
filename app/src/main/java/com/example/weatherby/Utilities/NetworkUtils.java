@@ -44,7 +44,6 @@ public final class NetworkUtils {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        Log.e(LOG_TAG, url.toString());
         return url;
     }
 
@@ -53,6 +52,7 @@ public final class NetworkUtils {
         try {
             InputStream inputStream = httpURLConnection.getInputStream();
             Scanner sc = new Scanner(inputStream);
+            
             sc.useDelimiter("\\A");
             if (sc.hasNext()){
                 return sc.next();

@@ -34,8 +34,8 @@ public class WeatherJSONUtils {
         JSONObject weatherData = new JSONObject(jsonString);
 
         if(weatherData.has(RESPONSE_CODE)){
-            int resPonseCode = weatherData.getInt(RESPONSE_CODE);
-            switch(resPonseCode){
+            int responseCode = weatherData.getInt(RESPONSE_CODE);
+            switch(responseCode){
                 case HttpURLConnection.HTTP_OK:
                     break;
                 default:
