@@ -2,9 +2,12 @@ package com.example.weatherby;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,24 +25,30 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mWeatherTextView;
+    private RecyclerView mForecastList;
     private TextView mErrorTextView;
     private ProgressBar mProgressBar;
+    private ForecastAdapter mForecastAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mWeatherTextView = findViewById(R.id.tv_weather_data);
+        mForecastList = findViewById(R.id.rv_forecast_list);
         mErrorTextView = findViewById(R.id.tv_error_message);
         mProgressBar = findViewById(R.id.pb_network_loading);
+        mForecastAdapter = new ForecastAdapter();
+
+        mForecastList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        mForecastList.setHasFixedSize(true);
+        mForecastList.setAdapter(mForecastAdapter);
 
         loadWeatherData("Kolkata");
     }
 
     private void loadWeatherData(String location){
-        mWeatherTextView.setVisibility(View.INVISIBLE);
+        mForecastList.setVisibility(View.INVISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
         new WeatherAsyncTask().execute(location);
     }
@@ -55,12 +64,26 @@ public class MainActivity extends AppCompatActivity {
         int itemId = item.getItemId();
         switch(itemId){
             case R.id.action_refresh_btn:
-                mWeatherTextView.setText("");
                 loadWeatherData("Kolkata");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showWeatherDataView(){
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mErrorTextView.setVisibility(View.INVISIBLE);
+
+        mForecastList.setVisibility(View.VISIBLE);
+    }
+
+
+    private void showErrorMessage(){
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mErrorTextView.setVisibility(View.VISIBLE);
+
+        mForecastList.setVisibility(View.INVISIBLE);
     }
 
     public class WeatherAsyncTask extends AsyncTask<String, Void, String[]>{
@@ -82,12 +105,11 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String[] s) {
             mProgressBar.setVisibility(View.INVISIBLE);
             if(s != null && s.length != 0){
-                mWeatherTextView.setVisibility(View.VISIBLE);
-                for(String forecast: s){
-                    mWeatherTextView.append("\n\n\n" + forecast);
-                }
+                showWeatherDataView();
+                Log.e("Hello", ""+s.length);
+                mForecastAdapter.setWeatherData(s);
             } else{
-                mErrorTextView.setVisibility(View.VISIBLE);
+                showErrorMessage();
             }
         }
     }
