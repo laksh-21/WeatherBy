@@ -1,9 +1,11 @@
 package com.example.weatherby;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,10 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastHolder> {
 
     private String[] forecast;
-
-    public ForecastAdapter(){
-
-    }
 
     public void setWeatherData(String[] parsedResponse){
         this.forecast = parsedResponse;
@@ -42,12 +40,22 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         }
     }
 
-    public class ForecastHolder extends RecyclerView.ViewHolder{
+    public class ForecastHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mForecastTextView;
 
         public ForecastHolder(@NonNull View itemView) {
             super(itemView);
             mForecastTextView = itemView.findViewById(R.id.tv_list_item_weather);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            String weather = forecast[adapterPosition];
+//            Toast.makeText(v.getContext(), weather, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(v.getContext(), WeatherDetailsActivity.class).putExtra(Intent.EXTRA_TEXT, weather);
+            v.getContext().startActivity(intent);
         }
     }
 }

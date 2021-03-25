@@ -11,6 +11,9 @@
         style="@style/TextAppearance.AppCompat.Large"
         android:padding="16dp"/>
 
-    <!--  TODO-Add a view to make a divider between two different things  -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#606060"/>
 
 </LinearLayout>
