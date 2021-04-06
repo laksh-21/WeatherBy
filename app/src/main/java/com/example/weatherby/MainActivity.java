@@ -1,12 +1,18 @@
 package com.example.weatherby;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.AsyncTaskLoader;
+import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,14 +27,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String[]> {
 
     private RecyclerView mForecastList;
     private TextView mErrorTextView;
     private ProgressBar mProgressBar;
     private ForecastAdapter mForecastAdapter;
+
+    private final int ASYNC_LOADER_ID = 22;
+    private final String URL_BUNDLE_KEY = "url_key";
+    private LoaderManager mLoaderManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +55,8 @@ public class MainActivity extends AppCompatActivity {
         mForecastList.setHasFixedSize(true);
         mForecastList.setAdapter(mForecastAdapter);
 
-        loadWeatherData("Kolkata");
-    }
-
-    private void loadWeatherData(String location){
-        mForecastList.setVisibility(View.INVISIBLE);
-        mProgressBar.setVisibility(View.VISIBLE);
-        new WeatherAsyncTask().execute(location);
+        mLoaderManager = getSupportLoaderManager();
+        mLoaderManager.initLoader(ASYNC_LOADER_ID, null, this);
     }
 
     @Override
@@ -64,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
         int itemId = item.getItemId();
         switch(itemId){
             case R.id.action_refresh_btn:
-                loadWeatherData("Kolkata");
+                invalidateData();
+                mLoaderManager.restartLoader(ASYNC_LOADER_ID, null, this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -86,31 +93,64 @@ public class MainActivity extends AppCompatActivity {
         mForecastList.setVisibility(View.INVISIBLE);
     }
 
-    public class WeatherAsyncTask extends AsyncTask<String, Void, String[]>{
+    @NonNull
+    @Override
+    public Loader<String[]> onCreateLoader(int id, @Nullable Bundle args) {
+        return new AsyncTaskLoader<String[]>(this) {
 
-        @Override
-        protected String[] doInBackground(String... locations) {
-            String location = locations[0];
-            URL url = NetworkUtils.buildWeatherUrl(location);
-            try {
-                String response = NetworkUtils.getHttpResponse(url);
-                return WeatherJSONUtils.extractJSONData(MainActivity.this, response);
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
+            String[] weatherData = null;
 
-        @Override
-        protected void onPostExecute(String[] s) {
-            mProgressBar.setVisibility(View.INVISIBLE);
-            if(s != null && s.length != 0){
-                showWeatherDataView();
-                Log.e("Hello", ""+s.length);
-                mForecastAdapter.setWeatherData(s);
-            } else{
-                showErrorMessage();
+            @Nullable
+            @Override
+            public String[] loadInBackground() {
+                String locationQuery = "Kolkata";
+
+                URL weatherRequestUrl = NetworkUtils.buildWeatherUrl(locationQuery);
+
+                try {
+                    String jsonWeatherResponse = NetworkUtils.getHttpResponse(weatherRequestUrl);
+                    return WeatherJSONUtils.extractJSONData(MainActivity.this, jsonWeatherResponse);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
+
+            @Override
+            protected void onStartLoading() {
+                if(weatherData == null) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    forceLoad();
+                } else{
+                    deliverResult(weatherData);
+                }
+            }
+
+            @Override
+            public void deliverResult(@Nullable String[] data) {
+                weatherData = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<String[]> loader, String[] s) {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        if(s != null && s.length != 0){
+            showWeatherDataView();
+            mForecastAdapter.setWeatherData(s);
+        } else{
+            showErrorMessage();
         }
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<String[]> loader) {
+
+    }
+
+    private void invalidateData() {
+        mForecastAdapter.setWeatherData(null);
     }
 }

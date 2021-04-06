@@ -53,7 +53,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             String weather = forecast[adapterPosition];
-//            Toast.makeText(v.getContext(), weather, Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(v.getContext(), WeatherDetailsActivity.class).putExtra(Intent.EXTRA_TEXT, weather);
             v.getContext().startActivity(intent);
         }
