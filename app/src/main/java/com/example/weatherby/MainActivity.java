@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ForecastAdapter mForecastAdapter;
 
     private final int ASYNC_LOADER_ID = 22;
-    private final String URL_BUNDLE_KEY = "url_key";
     private LoaderManager mLoaderManager;
 
     @Override
