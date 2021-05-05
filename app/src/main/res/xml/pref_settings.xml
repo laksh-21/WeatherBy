@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:title="@string/metrics_pref_title"
+        android:key="@string/metrics_pref_key"
+        android:entries="@array/metrics_pref_entry"
+        android:entryValues="@array/metrics_pref_entryValues"
+        android:defaultValue="@string/metrics_pref_default"/>
+</PreferenceScreen>

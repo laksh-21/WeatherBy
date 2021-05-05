@@ -46,10 +46,16 @@ public class WeatherDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.detaal_share_btn){
-            shareWeather();
-            return true;
+        switch (item.getItemId()){
+            case R.id.detaal_share_btn:
+                shareWeather();
+                return true;
+            case R.id.settings_btn:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }

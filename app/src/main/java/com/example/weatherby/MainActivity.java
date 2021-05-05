@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -71,6 +72,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.action_refresh_btn:
                 invalidateData();
                 mLoaderManager.restartLoader(ASYNC_LOADER_ID, null, this);
+                return true;
+            case R.id.settings_btn:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

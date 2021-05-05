@@ -2,4 +2,10 @@
     <string name="app_name">WeatherBy</string>
     <string name="refresh_btn">Refresh</string>
     <string name="error_message">Could not retrieve data, please try again!</string>
+
+    <!--  The string values for list preference  -->
+    <string name="metrics_pref_title">Metrics</string>
+    <string name="metrics_pref_key">pref_key_metrics</string>
+    <string name="metrics_pref_default">imperial</string>
+
 </resources>
