@@ -8,4 +8,7 @@
     <string name="metrics_pref_key">pref_key_metrics</string>
     <string name="metrics_pref_default">imperial</string>
 
+    <!--  Some re-occuring values  -->
+    <string name="metric">metric</string>
+    <string name="imperial">imperial</string>
 </resources>
