@@ -6,14 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,14 +23,11 @@ import android.widget.TextView;
 import com.example.weatherby.Utilities.NetworkUtils;
 import com.example.weatherby.Utilities.WeatherJSONUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String[]> {
+public class MainActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<String[]>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private RecyclerView mForecastList;
     private TextView mErrorTextView;
@@ -40,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private final int ASYNC_LOADER_ID = 22;
     private LoaderManager mLoaderManager;
+
+    private static boolean PREFERENCES_CHANGED = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +55,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mLoaderManager = getSupportLoaderManager();
         mLoaderManager.initLoader(ASYNC_LOADER_ID, null, this);
+
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(PREFERENCES_CHANGED){
+            Log.e("Hello", "The pref has been changed");
+            mLoaderManager.restartLoader(ASYNC_LOADER_ID, null, this);
+            PREFERENCES_CHANGED = false;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -124,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             protected void onStartLoading() {
                 if(weatherData == null) {
                     mProgressBar.setVisibility(View.VISIBLE);
+                    mForecastList.setVisibility(View.INVISIBLE);
                     forceLoad();
                 } else{
                     deliverResult(weatherData);
@@ -156,5 +175,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void invalidateData() {
         mForecastAdapter.setWeatherData(null);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        PREFERENCES_CHANGED = true;
     }
 }
