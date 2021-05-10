@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">WeatherBy</string>
     <string name="refresh_btn">Refresh</string>
     <string name="error_message">Could not retrieve data, please try again!</string>
@@ -11,4 +11,12 @@
     <!--  Some re-occuring values  -->
     <string name="metric">metric</string>
     <string name="imperial">imperial</string>
+
+    <!--  Temprature formats  -->
+    <string name="format_temperature_celsius">
+        <xliff:g id="temp">%1.0f</xliff:g>\u00B0C
+    </string>
+    <string name="format_temperature_fahrenheit">
+        <xliff:g id="temp">%1.0f</xliff:g>\u00B0F
+    </string>
 </resources>

@@ -1,7 +1,6 @@
 package com.example.weatherby.Utilities;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,13 +51,13 @@ public class WeatherJSONUtils {
             JSONObject posForecast = forecastList.getJSONObject(pos);
 
             long epochTime = posForecast.getLong(EPOCH_CODE) * 1000L;
-            String date = WeatherByTimeUtils.convertEpochToDate(epochTime);
+            String date = WeatherUnitUtils.convertEpochToDate(epochTime);
 
             JSONObject tempObj = posForecast.getJSONObject(TEMP_DESC_CODE);
             double minTemp = tempObj.getDouble(TEMP_MIN_CODE);
             double maxTemp = tempObj.getDouble(TEMP_MAX_CODE);
 
-            String minMaxTemp = "Min: " + minTemp + " " + "Max: " + maxTemp;
+            String minMaxTemp = WeatherUnitUtils.factorMinMaxTemp(context, minTemp, maxTemp);
 
             parsedForecastList[pos] = date + " " + minMaxTemp;
         }

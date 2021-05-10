@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements
         mLoaderManager = getSupportLoaderManager();
         mLoaderManager.initLoader(ASYNC_LOADER_ID, null, this);
 
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(this).
+                registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onStart();
 
         if(PREFERENCES_CHANGED){
-            Log.e("Hello", "The pref has been changed");
             mLoaderManager.restartLoader(ASYNC_LOADER_ID, null, this);
             PREFERENCES_CHANGED = false;
         }
@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements
     protected void onDestroy() {
         super.onDestroy();
 
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(this).
+                unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
