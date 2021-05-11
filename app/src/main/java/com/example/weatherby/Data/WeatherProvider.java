@@ -4,10 +4,13 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.weatherby.Utilities.WeatherUnitUtils;
 
 public class WeatherProvider extends ContentProvider {
     private WeatherDBHelper mOpenHelper;
@@ -83,8 +86,70 @@ public class WeatherProvider extends ContentProvider {
     }
 
     @Override
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        int match = sUriMatcher.match(uri);
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        if(match == CODE_WEATHER){
+            db.beginTransaction();
+            int rowsInserted = 0;
+
+            try{
+                for(ContentValues value: values){
+                    long weatherDate = value.getAsLong(WeatherContract.WeatherEntry.COLUMN_DATE);
+
+                    if(!WeatherUnitUtils.isDateNormalized(weatherDate)){
+                        throw new IllegalArgumentException("Invalid date: " + weatherDate + ". Must normalise date");
+                    }
+
+                    long _id = db.insert(
+                            WeatherContract.WeatherEntry.TABLE_NAME,
+                            null,
+                            value);
+
+                    if(_id != -1){
+                        rowsInserted++;
+                    }
+                }
+            } finally {
+                db.endTransaction();
+            }
+
+            if(rowsInserted > 0){
+                getContext().getContentResolver().notifyChange(uri, null);
+            }
+
+            return rowsInserted;
+
+        } else{
+            return super.bulkInsert(uri, values);
+        }
+    }
+
+    @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        int numRowsDeleted;
+
+        if (selection == null){
+            selection = "1";
+        }
+
+        int match = sUriMatcher.match(uri);
+
+        if(match == CODE_WEATHER) {
+            numRowsDeleted = mOpenHelper.getWritableDatabase().delete(
+                    WeatherContract.WeatherEntry.TABLE_NAME,
+                    selection,
+                    selectionArgs);
+        }
+        else {
+            throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if (numRowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return numRowsDeleted;
     }
 
     @Override

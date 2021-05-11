@@ -7,12 +7,24 @@ import com.example.weatherby.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class WeatherUnitUtils {
+
+//    Milliseconds in a day
+    public static final long DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1);
+
     public static String convertEpochToDate(long epochTime){
         Date date = new Date(epochTime);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(date);
+    }
+
+    public static boolean isDateNormalized(long epochDate){
+        if(epochDate % DAY_IN_MILLIS == 0){
+            return true;
+        }
+        return false;
     }
 
     public static String factorMinMaxTemp(Context context, Double minT, Double maxT){
