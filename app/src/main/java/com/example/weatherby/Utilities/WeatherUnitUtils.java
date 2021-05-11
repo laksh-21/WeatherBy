@@ -27,6 +27,16 @@ public class WeatherUnitUtils {
         return false;
     }
 
+    public static long normalizeDate(long date) {
+        long daysSinceEpoch = elapsedDaysSinceEpoch(date);
+        long millisFromEpochToTodayAtMidnightUtc = daysSinceEpoch * DAY_IN_MILLIS;
+        return millisFromEpochToTodayAtMidnightUtc;
+    }
+
+    private static long elapsedDaysSinceEpoch(long utcDate) {
+        return TimeUnit.MILLISECONDS.toDays(utcDate);
+    }
+
     public static String factorMinMaxTemp(Context context, Double minT, Double maxT){
         boolean preferesMetric = WeatherPreferecnes.prefersMetric(context);
 

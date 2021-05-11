@@ -3,6 +3,8 @@ package com.example.weatherby.Data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.example.weatherby.Utilities.WeatherUnitUtils;
+
 
 public class WeatherContract {
 
@@ -23,5 +25,10 @@ public class WeatherContract {
         public static final String COLUMN_PRESSURE = "pressure";
         public static final String COLUMN_WIND_SPEED = "wind";
         public static final String COLUMN_DEGREES = "degrees";
+
+        public static String getSqlSelectByDate(){
+            long normalizedTodayDate = WeatherUnitUtils.normalizeDate(System.currentTimeMillis());
+            return WeatherEntry.COLUMN_DATE + " >= " +normalizedTodayDate;
+        }
     }
 }
