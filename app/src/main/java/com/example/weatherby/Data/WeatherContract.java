@@ -1,9 +1,19 @@
 package com.example.weatherby.Data;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
+
 public class WeatherContract {
+
+    public final static String CONTENT_AUTHORITY = "com.example.weatherby";
+    public final static Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+    public final static String PATH_WEATHER = "weather";
+
     public static final class WeatherEntry implements BaseColumns{
+        public static final Uri CONTENT_URI =BASE_CONTENT_URI.buildUpon().appendPath(PATH_WEATHER).build();
+
         public static final String TABLE_NAME = "weather";
         public static final String COLUMN_WEATHER_ID = "weather_id";
         public static final String COLUMN_DATE = "date";
