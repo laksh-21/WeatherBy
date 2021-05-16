@@ -28,6 +28,8 @@ public class WeatherDetailsActivity extends AppCompatActivity implements LoaderM
     private TextView mWindView;
     private TextView mPressureView;
 
+    private String mWeatherSummary = "Hello";
+
     private Uri mUri;
 
     public static final String[] WEATHER_DETAIL_PROJECTION = {
@@ -68,15 +70,16 @@ public class WeatherDetailsActivity extends AppCompatActivity implements LoaderM
 
         mUri = creationIntent.getData();
 
-        if(mUri == null)throw new NullPointerException("Uri for WeatherDetailActivity cannot be null");
+        if (mUri == null)
+            throw new NullPointerException("Uri for WeatherDetailActivity cannot be null");
     }
 
-    private void shareWeather(){
+    private void shareWeather() {
         Intent intent = ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")
                 .setText("Hello")
                 .getIntent();
-        if(intent.resolveActivity(getPackageManager()) != null){
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
     }
@@ -89,7 +92,7 @@ public class WeatherDetailsActivity extends AppCompatActivity implements LoaderM
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.detaal_share_btn:
                 shareWeather();
                 return true;
@@ -104,15 +107,15 @@ public class WeatherDetailsActivity extends AppCompatActivity implements LoaderM
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if(id == LOADER_ID){
+        if (id == LOADER_ID) {
             return new CursorLoader(this,
                     mUri,
                     WEATHER_DETAIL_PROJECTION,
                     null,
                     null,
                     null);
-        } else{
-             throw new RuntimeException("Loader Not Implemented: " + id);
+        } else {
+            throw new RuntimeException("Loader Not Implemented: " + id);
         }
     }
 
@@ -147,6 +150,24 @@ public class WeatherDetailsActivity extends AppCompatActivity implements LoaderM
         String lowTempString = WeatherUnitUtils.formatTemperature(this, minTemp);
         mHighTemperatureView.setText(lowTempString);
 
+//        Humidity
+        float humidity = data.getFloat(INDEX_WEATHER_HUMIDITY);
+        String humididtyString = getString(R.string.format_humidity, humidity);
+        mHumidityView.setText(humididtyString);
+
+//        Pressure
+        float pressure = data.getFloat(INDEX_WEATHER_PRESSURE);
+        String pressureString = getString(R.string.format_pressure, pressure);
+        mPressureView.setText(pressureString);
+
+//        Wind and wind speed
+        float windSpeed = data.getFloat(INDEX_WEATHER_WIND_SPEED);
+        float windDirection = data.getFloat(INDEX_WEATHER_DEGREES);
+
+        String windSpeedAndDirection = WeatherUnitUtils.getFormattedWind(this, windSpeed, windDirection);
+        mWindView.setText(windSpeedAndDirection);
+
+        mWeatherSummary = String.format("%s - %s - %s/%s", data, weatherDesc, highTempString, lowTempString);
     }
 
     @Override
