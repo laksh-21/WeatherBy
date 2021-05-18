@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.weatherby.Data.WeatherContract;
+import com.example.weatherby.Utilities.NotificationsUtils;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>{
@@ -80,8 +81,9 @@ public class MainActivity extends AppCompatActivity implements
         int itemId = item.getItemId();
         switch(itemId){
             case R.id.action_refresh_btn:
-                invalidateData();
-                mLoaderManager.restartLoader(ASYNC_LOADER_ID, null, this);
+//                invalidateData();
+//                mLoaderManager.restartLoader(ASYNC_LOADER_ID, null, this);
+                NotificationsUtils.showNotification(MainActivity.this);
                 return true;
             case R.id.settings_btn:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
