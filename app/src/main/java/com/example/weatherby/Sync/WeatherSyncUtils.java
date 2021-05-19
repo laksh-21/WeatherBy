@@ -1,4 +1,4 @@
-package com.example.weatherby.Utilities;
+package com.example.weatherby.Sync;
 
 public class WeatherSyncUtils {
     public final static String NOTIFICATION_CANCEL_ACTION = "notification-cancel-action";
