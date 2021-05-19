@@ -12,7 +12,8 @@ public class SyncJobIntentService extends JobIntentService {
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
-
+        String action = intent.getAction();
+        WeatherSyncUtils.executeTask(this, action);
     }
 
     public static void enqueueWork(Context context, Intent intent){

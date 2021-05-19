@@ -12,6 +12,8 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.weatherby.MainActivity;
 import com.example.weatherby.R;
+import com.example.weatherby.Sync.NotifBroadcastReciever;
+import com.example.weatherby.Sync.WeatherSyncUtils;
 
 public class NotificationsUtils {
     private static final String NOTIFICATION_CHANNEL_ID = "notification_channel_id";
@@ -30,6 +32,10 @@ public class NotificationsUtils {
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 // it sets the tap action
                 .setContentIntent(getTapAction(context))
+                // add button for cancelling the thing
+                .addAction(R.drawable.ic_settings,
+                        "Buzz off!",
+                        getCancelAction(context))
                 // it dismisses the notification if user taps one it
                 .setAutoCancel(true);
 
@@ -65,7 +71,16 @@ public class NotificationsUtils {
         }
     }
 
-//    private static PendingIntent getCancelAction(Context context){
-//        Intent mainActivityIntent = new Intent();
-//    }
+    private static PendingIntent getCancelAction(Context context){
+        Intent cancelIntent = new Intent(context, NotifBroadcastReciever.class);
+        cancelIntent.setAction(WeatherSyncUtils.NOTIFICATION_CANCEL_ACTION);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,
+                0,
+                cancelIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        return pendingIntent;
+    }
 }
