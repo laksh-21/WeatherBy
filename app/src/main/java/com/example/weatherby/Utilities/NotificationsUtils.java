@@ -43,7 +43,6 @@ public class NotificationsUtils {
             builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         }
 
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
@@ -82,5 +81,10 @@ public class NotificationsUtils {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
         return pendingIntent;
+    }
+
+    public static void cancelNotifications(Context context){
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 }

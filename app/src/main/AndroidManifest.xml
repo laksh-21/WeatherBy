@@ -3,6 +3,7 @@
     package="com.example.weatherby">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -38,7 +39,11 @@
             android:authorities="com.example.weatherby"
             android:name=".Data.WeatherProvider"
             android:exported="false"/>
-        
+
+        <service android:name=".Sync.SyncJobIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <receiver android:name=".Sync.NotifBroadcastReciever"/>
     </application>
 
 </manifest>
