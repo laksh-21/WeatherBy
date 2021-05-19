@@ -64,4 +64,8 @@ public class NotificationsUtils {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+//    private static PendingIntent getCancelAction(Context context){
+//        Intent mainActivityIntent = new Intent();
+//    }
 }
