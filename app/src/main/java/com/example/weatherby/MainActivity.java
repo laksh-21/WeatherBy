@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity implements
         mForecastList.setHasFixedSize(true);
         mForecastList.setAdapter(mForecastAdapter);
 
-//        showLoading();
-        showWeatherDataView();
+        showLoading();
+//        showWeatherDataView();
         mLoaderManager = getSupportLoaderManager();
         mLoaderManager.initLoader(ASYNC_LOADER_ID, null, this);
 
@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.action_refresh_btn:
 //                invalidateData();
 //                mLoaderManager.restartLoader(ASYNC_LOADER_ID, null, this);
-                insertDummyData();
                 NotificationsUtils.showNotification(MainActivity.this);
                 return true;
             case R.id.settings_btn:
@@ -99,20 +98,6 @@ public class MainActivity extends AppCompatActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void insertDummyData(){
-        ContentValues contentValue = new ContentValues();
-        contentValue.put(WeatherContract.WeatherEntry.COLUMN_DATE, System.currentTimeMillis());
-        contentValue.put(WeatherContract.WeatherEntry.COLUMN_HUMIDITY, 1);
-        contentValue.put(WeatherContract.WeatherEntry.COLUMN_PRESSURE, 1.0);
-        contentValue.put(WeatherContract.WeatherEntry.COLUMN_WIND_SPEED, 1.0);
-        contentValue.put(WeatherContract.WeatherEntry.COLUMN_DEGREES, 1.0);
-        contentValue.put(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP, 1.0);
-        contentValue.put(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP, 1.0);
-        contentValue.put(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID, 1);
-
-        getContentResolver().insert(WeatherContract.WeatherEntry.CONTENT_URI, contentValue);
     }
 
     private void showWeatherDataView(){
@@ -140,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements
             return new CursorLoader(this,
                     forecastUri,
                     null,
-                    null,
+                    selection,
                     null,
                     sortOrder);
         } else{

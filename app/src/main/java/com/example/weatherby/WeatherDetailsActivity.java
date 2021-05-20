@@ -11,6 +11,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -72,6 +73,8 @@ public class WeatherDetailsActivity extends AppCompatActivity implements LoaderM
 
         if (mUri == null)
             throw new NullPointerException("Uri for WeatherDetailActivity cannot be null");
+
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     private void shareWeather() {
@@ -148,7 +151,7 @@ public class WeatherDetailsActivity extends AppCompatActivity implements LoaderM
 //        Low Temp
         double minTemp = data.getDouble(INDEX_WEATHER_MIN_TEMP);
         String lowTempString = WeatherUnitUtils.formatTemperature(this, minTemp);
-        mHighTemperatureView.setText(lowTempString);
+        mLowTemperatureView.setText(lowTempString);
 
 //        Humidity
         float humidity = data.getFloat(INDEX_WEATHER_HUMIDITY);
