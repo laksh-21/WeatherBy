@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.weatherby.Data.WeatherContract;
+import com.example.weatherby.Sync.WeatherSyncUtils;
 import com.example.weatherby.Utilities.NotificationsUtils;
 
 public class MainActivity extends AppCompatActivity implements
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements
         mLoaderManager = getSupportLoaderManager();
         mLoaderManager.initLoader(ASYNC_LOADER_ID, null, this);
 
+        WeatherSyncUtils.syncWeatherNow(this);
     }
 
     @Override

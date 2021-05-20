@@ -53,6 +53,8 @@ public class WeatherJSONUtils {
 
         ContentValues[] contentValues = new ContentValues[count];
 
+        long normalizedUtcStartDay = WeatherUnitUtils.getNormalizedUtcDateForToday();
+
         for(int pos = 0; pos<count; pos++){
             long dateTimeInMillis;
             double pressure;
@@ -63,7 +65,8 @@ public class WeatherJSONUtils {
 
             JSONObject posForecast = forecastList.getJSONObject(pos);
 
-            dateTimeInMillis = posForecast.getLong(EPOCH_CODE) * 1000L;
+//            dateTimeInMillis = posForecast.getLong(EPOCH_CODE) * 1000L;
+            dateTimeInMillis = normalizedUtcStartDay + WeatherUnitUtils.DAY_IN_MILLIS * pos;
             pressure = posForecast.getDouble(PRESSURE_CODE);
             humidity = posForecast.getInt(HUMIDITY_CODE);
             windSpeed = posForecast.getDouble(WIND_SPEED_CODE);

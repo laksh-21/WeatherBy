@@ -7,6 +7,7 @@ import com.example.weatherby.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class WeatherUnitUtils {
@@ -18,6 +19,17 @@ public class WeatherUnitUtils {
         Date date = new Date(epochTime);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(date);
+    }
+
+    public static long getNormalizedUtcDateForToday() {
+        long utcNowMillis = System.currentTimeMillis();
+
+        TimeZone currentTimeZone = TimeZone.getDefault();
+        long gmtOffsetMillis = currentTimeZone.getOffset(utcNowMillis);
+        long timeSinceEpochLocalTimeMillis = utcNowMillis + gmtOffsetMillis;
+        long daysSinceEpochLocal = TimeUnit.MILLISECONDS.toDays(timeSinceEpochLocalTimeMillis);
+        long normalizedUtcMidnightMillis = TimeUnit.DAYS.toMillis(daysSinceEpochLocal);
+        return normalizedUtcMidnightMillis;
     }
 
     public static boolean isDateNormalized(long epochDate){

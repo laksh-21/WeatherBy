@@ -3,6 +3,7 @@ package com.example.weatherby.Sync;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 
 import com.example.weatherby.Data.WeatherContract;
 import com.example.weatherby.Utilities.NetworkUtils;
@@ -16,10 +17,13 @@ import java.net.URL;
 
 public class WeatherSyncUtils {
     public final static String NOTIFICATION_CANCEL_ACTION = "notification-cancel-action";
+    public final static String SYNC_WEATHER_ACTION = "weather-sync-action";
 
     public static void executeTask(Context context, String action){
         if(action.equals(NOTIFICATION_CANCEL_ACTION)){
             NotificationsUtils.cancelNotifications(context);
+        } else if(action.equals(SYNC_WEATHER_ACTION)){
+            syncWeather(context);
         }
     }
 
@@ -48,5 +52,11 @@ public class WeatherSyncUtils {
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void syncWeatherNow(Context context){
+        Intent intent = new Intent(context, SyncJobIntentService.class);
+        intent.setAction(SYNC_WEATHER_ACTION);
+        SyncJobIntentService.enqueueWork(context, intent);
     }
 }
