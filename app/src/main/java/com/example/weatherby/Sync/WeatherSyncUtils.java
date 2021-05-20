@@ -1,9 +1,15 @@
 package com.example.weatherby.Sync;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 
+import com.example.weatherby.Data.WeatherContract;
 import com.example.weatherby.Utilities.NetworkUtils;
 import com.example.weatherby.Utilities.NotificationsUtils;
+import com.example.weatherby.Utilities.WeatherJSONUtils;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,8 +29,23 @@ public class WeatherSyncUtils {
 
             String jsonResponse = NetworkUtils.getHttpResponse(weatherURL);
 
-            // reformat the parse JSON thingy to send out an array of ContentValues
-        } catch (IOException e) {
+            ContentValues[] contentValues = WeatherJSONUtils.extractJSONData(context, jsonResponse);
+
+            if(contentValues != null && contentValues.length > 0){
+                ContentResolver resolver = context.getContentResolver();
+
+                resolver.delete(
+                        WeatherContract.WeatherEntry.CONTENT_URI,
+                        null,
+                        null
+                );
+
+                resolver.bulkInsert(
+                        WeatherContract.WeatherEntry.CONTENT_URI,
+                        contentValues
+                );
+            }
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }
