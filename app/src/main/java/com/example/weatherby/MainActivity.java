@@ -9,10 +9,12 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,10 +56,12 @@ public class MainActivity extends AppCompatActivity implements
         mForecastList.setHasFixedSize(true);
         mForecastList.setAdapter(mForecastAdapter);
 
-        showLoading();
-
+//        showLoading();
+        showWeatherDataView();
         mLoaderManager = getSupportLoaderManager();
         mLoaderManager.initLoader(ASYNC_LOADER_ID, null, this);
+
+
 
         WeatherSyncUtils.syncWeatherNow(this);
     }
@@ -85,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.action_refresh_btn:
 //                invalidateData();
 //                mLoaderManager.restartLoader(ASYNC_LOADER_ID, null, this);
+                insertDummyData();
                 NotificationsUtils.showNotification(MainActivity.this);
                 return true;
             case R.id.settings_btn:
@@ -94,6 +99,20 @@ public class MainActivity extends AppCompatActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void insertDummyData(){
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(WeatherContract.WeatherEntry.COLUMN_DATE, System.currentTimeMillis());
+        contentValue.put(WeatherContract.WeatherEntry.COLUMN_HUMIDITY, 1);
+        contentValue.put(WeatherContract.WeatherEntry.COLUMN_PRESSURE, 1.0);
+        contentValue.put(WeatherContract.WeatherEntry.COLUMN_WIND_SPEED, 1.0);
+        contentValue.put(WeatherContract.WeatherEntry.COLUMN_DEGREES, 1.0);
+        contentValue.put(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP, 1.0);
+        contentValue.put(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP, 1.0);
+        contentValue.put(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID, 1);
+
+        getContentResolver().insert(WeatherContract.WeatherEntry.CONTENT_URI, contentValue);
     }
 
     private void showWeatherDataView(){
@@ -120,8 +139,8 @@ public class MainActivity extends AppCompatActivity implements
 
             return new CursorLoader(this,
                     forecastUri,
-                    MAIN_FORECAST_PROJECTION,
-                    selection,
+                    null,
+                    null,
                     null,
                     sortOrder);
         } else{
@@ -135,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         mForecastList.smoothScrollToPosition(mPosition);
 
+        Log.e("Main", "LoaderFinished" + data.getCount());
         if (data.getCount() != 0) showWeatherDataView();
     }
 

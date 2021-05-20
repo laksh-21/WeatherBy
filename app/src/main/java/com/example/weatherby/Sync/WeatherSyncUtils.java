@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.example.weatherby.Data.WeatherContract;
 import com.example.weatherby.Utilities.NetworkUtils;
@@ -48,10 +49,12 @@ public class WeatherSyncUtils {
                         WeatherContract.WeatherEntry.CONTENT_URI,
                         contentValues
                 );
+
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
+        Log.e("SyncUtils", "Values inserted");
     }
 
     public static void syncWeatherNow(Context context){

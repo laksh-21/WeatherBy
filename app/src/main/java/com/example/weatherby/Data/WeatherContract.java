@@ -30,5 +30,11 @@ public class WeatherContract {
             long normalizedTodayDate = WeatherUnitUtils.normalizeDate(System.currentTimeMillis());
             return WeatherEntry.COLUMN_DATE + " >= " +normalizedTodayDate;
         }
+
+        public static Uri buildWeatherUriWithDate(long date) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(Long.toString(date))
+                    .build();
+        }
     }
 }

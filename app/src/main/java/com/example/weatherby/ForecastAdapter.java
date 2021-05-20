@@ -72,7 +72,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         public void onClick(View v) {
 //            int adapterPosition = getAdapterPosition();
             String weather = mForecastTextView.getText().toString();
-            Intent intent = new Intent(v.getContext(), WeatherDetailsActivity.class).putExtra(Intent.EXTRA_TEXT, weather);
+            Intent intent = new Intent(v.getContext(), WeatherDetailsActivity.class);
+            intent.setData(WeatherContract.WeatherEntry.buildWeatherUriWithDate(mForecastCursor.getLong(mForecastCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE))));
             v.getContext().startActivity(intent);
         }
     }
