@@ -40,7 +40,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     public void onBindViewHolder(@NonNull ForecastHolder holder, int position) {
         mForecastCursor.moveToPosition(position);
         long epochDate = mForecastCursor.getLong(mForecastCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE));
-        String formattedDate = WeatherUnitUtils.convertEpochToDate(epochDate * 1000L);
+        String formattedDate = WeatherUnitUtils.convertEpochToDate(epochDate);
 
         double minTemp = mForecastCursor.getDouble(mForecastCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP));
         double maxTemp = mForecastCursor.getDouble(mForecastCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP));
