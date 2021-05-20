@@ -35,7 +35,7 @@ public class WeatherJSONUtils {
      final static String PRESSURE_CODE = "pressure";
      final static String HUMIDITY_CODE = "humidity";
 
-    public static String[] extractJSONData(Context context, String jsonString) throws JSONException {
+    public static ContentValues[] extractJSONData(Context context, String jsonString) throws JSONException {
         JSONObject weatherData = new JSONObject(jsonString);
 
         if(weatherData.has(RESPONSE_CODE)){
@@ -51,7 +51,6 @@ public class WeatherJSONUtils {
         JSONArray forecastList = weatherData.getJSONArray(FORECAST_LIST_CODE);
         int count = forecastList.length();
 
-        String[] parsedForecastList = new String[count];
         ContentValues[] contentValues = new ContentValues[count];
 
         for(int pos = 0; pos<count; pos++){
@@ -91,6 +90,6 @@ public class WeatherJSONUtils {
 
             contentValues[pos] = contentValue;
         }
-        return parsedForecastList;
+        return contentValues;
     }
 }
