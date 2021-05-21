@@ -20,6 +20,8 @@ public class WeatherSyncUtils {
     public final static String NOTIFICATION_CANCEL_ACTION = "notification-cancel-action";
     public final static String SYNC_WEATHER_ACTION = "weather-sync-action";
 
+    public static boolean firstOpen = true;
+
     public static void executeTask(Context context, String action){
         if(action.equals(NOTIFICATION_CANCEL_ACTION)){
             NotificationsUtils.cancelNotifications(context);
@@ -29,6 +31,7 @@ public class WeatherSyncUtils {
     }
 
     synchronized public static void syncWeather(Context context){
+        if(!firstOpen) return;
         try {
             URL weatherURL = NetworkUtils.buildWeatherUrl("Kolkata");
 
@@ -54,7 +57,7 @@ public class WeatherSyncUtils {
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-        Log.e("SyncUtils", "Values inserted");
+        firstOpen = false;
     }
 
     public static void syncWeatherNow(Context context){

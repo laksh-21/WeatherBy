@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements
 
             return new CursorLoader(this,
                     forecastUri,
-                    null,
+                    MAIN_FORECAST_PROJECTION,
                     selection,
                     null,
                     sortOrder);
@@ -139,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         mForecastList.smoothScrollToPosition(mPosition);
 
-        Log.e("Main", "LoaderFinished" + data.getCount());
         if (data.getCount() != 0) showWeatherDataView();
     }
 

@@ -71,8 +71,9 @@ public class WeatherDetailsActivity extends AppCompatActivity implements LoaderM
 
         mUri = creationIntent.getData();
 
-        if (mUri == null)
+        if (mUri == null) {
             throw new NullPointerException("Uri for WeatherDetailActivity cannot be null");
+        }
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
@@ -80,7 +81,7 @@ public class WeatherDetailsActivity extends AppCompatActivity implements LoaderM
     private void shareWeather() {
         Intent intent = ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")
-                .setText("Hello")
+                .setText(mWeatherSummary)
                 .getIntent();
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
