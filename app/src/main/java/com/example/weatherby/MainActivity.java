@@ -3,11 +3,18 @@ package com.example.weatherby;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -22,7 +29,10 @@ import android.widget.ProgressBar;
 
 import com.example.weatherby.Data.WeatherContract;
 import com.example.weatherby.Sync.WeatherSyncUtils;
+import com.example.weatherby.Sync.WeatherSyncWorker;
 import com.example.weatherby.Utilities.NotificationsUtils;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>{
@@ -60,8 +70,6 @@ public class MainActivity extends AppCompatActivity implements
 //        showWeatherDataView();
         mLoaderManager = getSupportLoaderManager();
         mLoaderManager.initLoader(ASYNC_LOADER_ID, null, this);
-
-
 
         WeatherSyncUtils.syncWeatherNow(this);
     }

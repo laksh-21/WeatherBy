@@ -1,10 +1,14 @@
 package com.example.weatherby.Sync;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
+import com.example.weatherby.Utilities.NotificationsUtils;
 
 public class WeatherSyncWorker extends Worker {
     public WeatherSyncWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -14,7 +18,8 @@ public class WeatherSyncWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        WeatherSyncUtils.syncWeather(getApplicationContext());
-        return Result.retry();
+        Log.d("Worker", "Called");
+        NotificationsUtils.showNotification(getApplicationContext());
+        return Result.success();
     }
 }

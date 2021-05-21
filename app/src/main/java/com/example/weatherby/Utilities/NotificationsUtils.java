@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -21,6 +22,7 @@ public class NotificationsUtils {
     private static final int INTENT_CODE = 9411;
 
     public static void showNotification(Context context){
+        Log.d("Notification", "Called");
         createChannel(context);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
