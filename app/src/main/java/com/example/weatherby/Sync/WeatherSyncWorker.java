@@ -19,7 +19,8 @@ public class WeatherSyncWorker extends Worker {
     @Override
     public Result doWork() {
         Log.d("Worker", "Called");
-        NotificationsUtils.showNotification(getApplicationContext());
+//        NotificationsUtils.showNotification(getApplicationContext());
+        WeatherSyncUtils.syncWeather(getApplicationContext());
         return Result.success();
     }
 }

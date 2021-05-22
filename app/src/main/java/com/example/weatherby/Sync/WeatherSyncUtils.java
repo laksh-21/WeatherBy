@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Network;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import androidx.lifecycle.Observer;
@@ -20,6 +21,7 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import com.example.weatherby.Data.WeatherContract;
+import com.example.weatherby.Data.WeatherPreferecnes;
 import com.example.weatherby.MainActivity;
 import com.example.weatherby.Utilities.NetworkUtils;
 import com.example.weatherby.Utilities.NotificationsUtils;
@@ -78,6 +80,25 @@ public class WeatherSyncUtils {
             e.printStackTrace();
         }
         firstOpen = false;
+
+        long timeSinceLastNotification = WeatherPreferecnes
+                .getEllapsedTimeSinceLastNotification(context);
+
+        boolean oneDayPassedSinceLastNotification = false;
+
+//              COMPLETED (14) Check if a day has passed since the last notification
+        if (timeSinceLastNotification >= DateUtils.DAY_IN_MILLIS) {
+            oneDayPassedSinceLastNotification = true;
+        }
+
+        /*
+         * We only want to show the notification if the user wants them shown and we
+         * haven't shown a notification in the past day.
+         */
+//              COMPLETED (15) If more than a day have passed and notifications are enabled, notify the user
+        if (oneDayPassedSinceLastNotification) {
+            NotificationsUtils.showNotification(context);
+        }
     }
 
     public static void syncWeatherNow(Context context){
@@ -110,4 +131,6 @@ public class WeatherSyncUtils {
         WorkManager.getInstance(context).enqueueUniquePeriodicWork("Sync-task",
                 ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest);
     }
+
+
 }
