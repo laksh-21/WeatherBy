@@ -85,17 +85,10 @@ public class WeatherSyncUtils {
                 .getEllapsedTimeSinceLastNotification(context);
 
         boolean oneDayPassedSinceLastNotification = false;
-
-//              COMPLETED (14) Check if a day has passed since the last notification
         if (timeSinceLastNotification >= DateUtils.DAY_IN_MILLIS) {
             oneDayPassedSinceLastNotification = true;
         }
 
-        /*
-         * We only want to show the notification if the user wants them shown and we
-         * haven't shown a notification in the past day.
-         */
-//              COMPLETED (15) If more than a day have passed and notifications are enabled, notify the user
         if (oneDayPassedSinceLastNotification) {
             NotificationsUtils.showNotification(context);
         }
